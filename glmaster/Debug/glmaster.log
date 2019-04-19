@@ -1,2 +1,5 @@
 ﻿  glmaster.cpp
+c:\users\administrator.oem-20190220wgl\source\repos\glmaster\glmaster\glmaster.cpp(30): warning C4305: “初始化”: 从“double”到“float”截断
+c:\users\administrator.oem-20190220wgl\source\repos\glmaster\glmaster\glmaster.cpp(115): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\administrator.oem-20190220wgl\source\repos\glmaster\glmaster\glmaster.cpp(116): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
   glmaster.vcxproj -> C:\Users\Administrator.OEM-20190220WGL\Source\Repos\glmaster\Debug\glmaster.exe

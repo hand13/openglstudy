@@ -8,16 +8,18 @@
 #include <SDL_opengl.h>
 #include <gl\GL.h>
 #include <gl\GLU.h>
+#include <math.h>
 using namespace std;
-void draw(SDL_Window * win);
+void draw(SDL_Window * win,unsigned int ticket);
 GLuint vaoId;
 GLuint vboId;
 GLuint evoId;
 const char *vertexShader = "#version 120\n"
+"uniform mat4 romatrix;\n"
 "attribute vec3 aPos;\n"
 "void main()\n"
 "{\n"
-" gl_Position = vec4(aPos.x/2 - 0.85*aPos.y,aPos.y/2 + 0.85*aPos.x,aPos.z,1.0);\n"
+" gl_Position = romatrix * vec4(aPos.x,aPos.y,aPos.z,1.0);\n"
 "}\n\0";
 const char *fragmentShaderSource = "#version 120\n"
 "void main()\n"
@@ -25,6 +27,7 @@ const char *fragmentShaderSource = "#version 120\n"
 "gl_FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" 
 "}\n\0";
 int program;
+float PI = 3.14159;
 int main(int argn,char ** argc){
 	int result = 0;
 	result = SDL_Init(SDL_INIT_EVERYTHING);
@@ -103,15 +106,25 @@ int main(int argn,char ** argc){
 				flag = false;
 			}
 		}
-		draw(window);
+		draw(window,SDL_GetTicks());
 	}
 	SDL_Quit();
 	return 0;
 }
-static void draw(SDL_Window * win) {
+static void draw(SDL_Window * win,unsigned int tick) {
+	float a = tick / 100.0;
+	GLfloat angle = (a / 360.0) * 2 * PI;
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(program);
+	GLuint romatrix = glGetUniformLocation(program, "romatrix");
+	GLfloat matrix[] = {
+		1,0,0,0,
+		0,cos(angle),-sin(angle),0,
+		0,sin(angle),cos(angle),0,
+		0,0,0,1,
+	};
+	glUniformMatrix4fv(romatrix, 1, GL_FALSE, matrix);
 	glBindVertexArray(vaoId);
 	glDrawElements(GL_TRIANGLES, 36,GL_UNSIGNED_INT , 0);
 	SDL_GL_SwapWindow(win);
